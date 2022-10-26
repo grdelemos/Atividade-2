@@ -152,24 +152,23 @@ void Ship::destroy() {
   abcg::glDeleteVertexArrays(1, &m_VAO);
 }
 
-void Ship::update(GameData const &gameData, float deltaTime) {
-  // Rotate
+void Ship::update(GameData const &gameData, bool hard) {
+
+  double speed;
+  if (hard == true) {
+    speed = 18.0;
+  } else {
+    speed = 16.0;
+  }
+
   if (gameData.m_input[gsl::narrow<size_t>(Input::Left)]) {
     if (m_translation.x > -0.85) {
-      m_translation.x -= (1 / 16.0);
+      m_translation.x -= (1 / speed);
     }
   }
   if (gameData.m_input[gsl::narrow<size_t>(Input::Right)]) {
     if (m_translation.x < 0.85) {
-      m_translation.x += (1 / 16.0);
+      m_translation.x += (1 / speed);
     }
-  }
-
-  // Apply thrust
-  if (gameData.m_input[gsl::narrow<size_t>(Input::Up)] &&
-      gameData.m_state == State::Playing) {
-    // Thrust in the forward vector
-    auto const forward{glm::rotate(glm::vec2{0.0f, 1.0f}, m_rotation)};
-    m_velocity += forward * deltaTime;
   }
 }

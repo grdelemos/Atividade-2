@@ -14,7 +14,7 @@ public:
   void create(GLuint program, int quantity);
   void paint();
   void destroy();
-  void update(float deltaTime, GameData &gameData);
+  void update(float deltaTime, GameData &gameData, bool hard);
 
   struct Asteroid {
     GLuint m_VAO{};

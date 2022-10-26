@@ -23,8 +23,8 @@ void Window::onCreate() {
 
   // Load a new font
   auto const filename{assetsPath + "Inconsolata-Medium.ttf"};
-  m_font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 60.0f);
-  m_font2 = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 45.0f);
+  m_font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 45.0f);
+  m_font2 = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 40.0f);
   if (m_font == nullptr) {
     throw abcg::RuntimeError("Cannot load font file");
   }
@@ -76,9 +76,9 @@ void Window::restart() {
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
 
-  m_ship.update(m_gameData, deltaTime);
+  m_ship.update(m_gameData, hard);
   m_starLayers.update(deltaTime, m_gameData);
-  m_asteroids.update(deltaTime, m_gameData);
+  m_asteroids.update(deltaTime, m_gameData, hard);
 
   if (m_gameData.m_state == State::Playing) {
     checkCollisions(deltaTime);
@@ -108,19 +108,53 @@ void Window::onPaintUI() {
                                  ImGuiWindowFlags_NoTitleBar |
                                  ImGuiWindowFlags_NoNavInputs};
     ImGui::Begin(" ", nullptr, flags);
-    ImGui::PushFont(m_font2);
+    ImGui::PushFont(m_font);
 
     ImGui::Text("Rebata os meteoros");
-    ImGui::Text("por 30 segundos");
+    ImGui::Text("por 40 segundos");
 
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 1.0f, 1.00f));
     ImGui::Text("Use as setas do teclado");
     ImGui::Text("ou as teclas A e D");
     ImGui::PopStyleColor();
 
-    if (ImGui::Button("Iniciar", ImVec2(350, 60))) {
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0.5f, 0, 1.0f});
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0, 0.4f, 0, 1.0f});
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0, 0.5f, 0, 1.0f});
+    if (ImGui::Button("Iniciar -Fácil", ImVec2(380, 60))) {
+      hard = false;
       restart();
     }
+    ImGui::PopStyleColor(3);
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.5f, 0, 0, 1.0f});
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.4f, 0, 0, 1.0f});
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.5f, 0, 0, 1.0f});
+    if (ImGui::Button("Iniciar -Difícil", ImVec2(380, 60))) {
+      hard = true;
+      restart();
+    }
+    ImGui::PopStyleColor(3);
+
+    ImGui::PopFont();
+    ImGui::End();
+  }
+
+  if (m_gameData.m_state == State::Playing) {
+    auto count{
+        fmt::format("{}", (40 - std::round(m_restartWaitTimer.elapsed())))};
+    auto const sizeStart{ImVec2(m_viewportSize.x, m_viewportSize.y)};
+    auto const positionStart{
+        ImVec2((m_viewportSize.x) / 23.0f, (m_viewportSize.y) / 17.0f)};
+    ImGui::SetNextWindowPos(positionStart);
+    ImGui::SetNextWindowSize(sizeStart);
+    ImGuiWindowFlags const flags{ImGuiWindowFlags_NoBackground |
+                                 ImGuiWindowFlags_NoTitleBar |
+                                 ImGuiWindowFlags_NoNavInputs};
+    ImGui::Begin(" ", nullptr, flags);
+    ImGui::PushFont(m_font2);
+
+    ImGui::Text(count.c_str());
 
     ImGui::PopFont();
     ImGui::End();
@@ -140,14 +174,45 @@ void Window::onPaintUI() {
 
     if (m_gameData.m_state == State::GameOver) {
       ImGui::Text("Game Over");
-      if (ImGui::Button("Reiniciar", ImVec2(300, 60))) {
+
+      ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0.5f, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0, 0.4f, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0, 0.5f, 0, 1.0f});
+      if (ImGui::Button("Reiniciar -Fácil", ImVec2(400, 60))) {
+        hard = false;
         restart();
       }
+      ImGui::PopStyleColor(3);
+
+      ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.5f, 0, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.4f, 0, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.5f, 0, 0, 1.0f});
+      if (ImGui::Button("Reiniciar -Difícil", ImVec2(400, 60))) {
+        hard = true;
+        restart();
+      }
+      ImGui::PopStyleColor(3);
+
     } else if (m_gameData.m_state == State::Win) {
-      ImGui::Text("*Você Venceu!");
-      if (ImGui::Button("Reiniciar", ImVec2(300, 60))) {
+      ImGui::Text("*Você Venceu!*");
+
+      ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0.5f, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0, 0.4f, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0, 0.5f, 0, 1.0f});
+      if (ImGui::Button("Reiniciar -Fácil", ImVec2(400, 60))) {
+        hard = false;
         restart();
       }
+      ImGui::PopStyleColor(3);
+
+      ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.5f, 0, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.4f, 0, 0, 1.0f});
+      ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.5f, 0, 0, 1.0f});
+      if (ImGui::Button("Reiniciar -Difícil", ImVec2(400, 60))) {
+        hard = true;
+        restart();
+      }
+      ImGui::PopStyleColor(3);
     }
 
     ImGui::PopFont();
@@ -190,7 +255,7 @@ void Window::checkCollisions(float deltaTime) {
 }
 
 void Window::checkWinCondition() {
-  if (m_restartWaitTimer.elapsed() > 30) {
+  if (m_restartWaitTimer.elapsed() > 40) {
     m_gameData.m_state = State::Win;
   }
 }

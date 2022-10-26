@@ -59,7 +59,14 @@ void Asteroids::destroy() {
   }
 }
 
-void Asteroids::update(float deltaTime, GameData &gameData) {
+void Asteroids::update(float deltaTime, GameData &gameData, bool hard) {
+  int interval;
+  if (hard == true) {
+    interval = 3;
+  } else {
+    interval = 5;
+  }
+
   for (auto &asteroid : m_asteroids) {
 
     asteroid.m_rotation = glm::wrapAngle(
@@ -81,7 +88,7 @@ void Asteroids::update(float deltaTime, GameData &gameData) {
     }
   }
 
-  if (asTimer.elapsed() > 5 && gameData.m_state == State::Playing) {
+  if (asTimer.elapsed() > interval && gameData.m_state == State::Playing) {
     Asteroid asteroid = makeAsteroid();
     do {
       asteroid.m_translation = {m_randomDist(m_randomEngine),
@@ -99,8 +106,6 @@ Asteroids::Asteroid Asteroids::makeAsteroid(glm::vec2 translation,
 
   auto &re{m_randomEngine}; // Shortcut
 
-  // Randomly pick the number of sides
-
   asteroid.m_polygonSides = 10;
 
   asteroid.m_color = glm::vec4(0.9f);
@@ -110,7 +115,6 @@ Asteroids::Asteroid Asteroids::makeAsteroid(glm::vec2 translation,
   asteroid.m_scale = scale;
   asteroid.m_translation = translation;
 
-  // Get a random angular velocity
   asteroid.m_angularVelocity = 10;
 
   // Get a random direction

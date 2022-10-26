@@ -10,7 +10,7 @@ public:
   void create(GLuint program);
   void paint(GameData const &gameData);
   void destroy();
-  void update(GameData const &gameData, float deltaTime);
+  void update(GameData const &gameData, bool hard);
 
   glm::vec4 m_color{1};
   float m_rotation{};

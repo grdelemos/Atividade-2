@@ -6,7 +6,6 @@
 #include "abcgOpenGL.hpp"
 
 #include "asteroids.hpp"
-#include "bullets.hpp"
 #include "ship.hpp"
 #include "starlayers.hpp"
 
@@ -38,6 +37,8 @@ private:
   ImFont *m_font2{};
 
   std::default_random_engine m_randomEngine;
+
+  bool hard;
 
   void start();
   void restart();
