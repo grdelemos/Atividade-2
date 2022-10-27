@@ -15,7 +15,7 @@ O módulo Window contém o funcionamento principal do programa: ele carrega os s
     auto count{
         fmt::format("{}", (40 - std::round(m_restartWaitTimer.elapsed())))};
 
-o timer "m_restartWaitTimer" é reiniciado no começo da partida, e a variável count é o resultado do número 40 menos o tempo passado desde o seu reinício. O resultado é um contador regressivo, para mostrar ao jogador quanto tempo falta. Quando esse contador chega a 0, significa que passaram 40 segundos e o jogo acabou. A função checkCOndition() faz esse controle:
+o timer "m_restartWaitTimer" é reiniciado no começo da partida, e a variável count é o resultado do número 40 menos o tempo passado desde o seu reinício. O resultado é um contador regressivo, para mostrar ao jogador quanto tempo falta. Quando esse contador chega a 0, significa que passaram 40 segundos e o jogo acabou. A função checkCondition() faz esse controle:
 
     void Window::checkWinCondition() {
         if (m_restartWaitTimer.elapsed() > 40) {
@@ -23,7 +23,7 @@ o timer "m_restartWaitTimer" é reiniciado no começo da partida, e a variável 
         }
     }
 
-Para que a nave possa rebater os meteoros, há a detecção de colisão entre esses elementos:
+Para que a nave possa rebater os asteróides, há a detecção de colisão entre esses elementos:
 
     if (distance < m_ship.m_scale * 0.9f + asteroid.m_scale * 0.85f) {
 
