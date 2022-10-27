@@ -23,7 +23,6 @@ void Asteroids::create(GLuint program, int quantity) {
   for (auto &asteroid : m_asteroids) {
     asteroid = makeAsteroid();
 
-    // Make sure the asteroid won't collide with the ship
     do {
       asteroid.m_translation = {m_randomDist(m_randomEngine),
                                 m_randomDist(m_randomEngine) + 1.5f};

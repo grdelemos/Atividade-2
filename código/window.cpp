@@ -110,7 +110,7 @@ void Window::onPaintUI() {
     ImGui::Begin(" ", nullptr, flags);
     ImGui::PushFont(m_font);
 
-    ImGui::Text("Rebata os meteoros");
+    ImGui::Text("Rebata os asteróides");
     ImGui::Text("por 40 segundos");
 
     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 1.0f, 1.00f));
